@@ -1,4 +1,4 @@
-{
+/*{
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": "../node_modules",
@@ -6,6 +6,6 @@
       "cypress"
     ]
   },
-  "include": ["**/*.*"]
+  "include": ["** /*.*"]
 }
-//doesn't work as expected
+//doesn't work as expected*/
