@@ -1,4 +1,7 @@
 /// <reference types="Cypress" />
+// The triple slash is to inidicate vscode where the definitions are 
+// to use intellisense. I could change it with the tsconfig, but for
+// some reason it does not work.
 
 context('Actions', () => {
   beforeEach(() => {
