@@ -1,56 +1,41 @@
-it('loads the page', () => {
-  describe('Todo app', () => {
+describe('Todo app', () => {
+  beforeEach(function () {
+    cy.fixture('todos/all').as('todosPreload');
+  });
+  //VERY IMPORTANT TO USE THE 'OLD SCHOOL' FUNCTION SYNTAX, NOT THE NEW ARROW I.E.
+  /*
+  function (){}; WORKS!!
+  () => {}; DOES NOT WORK!!=> does not have a this context
+  */
+  it('loads the page', function () {
     cy.server();
 
-    cy.route('/api/todos', [
-      {
-        text: 'first',
-        completed: true,
-        id: 1
-      },
-      {
-        text: 'second',
-        completed: false,
-        id: 2
-      },
-      {
-        text: 'third',
-        completed: true,
-        id: 3
-      },
-      {
-        text: 'fourth',
-        completed: false,
-        id: 4
-      },
-      {
-        text: 'fifth',
-        completed: true,
-        id: 5
-      }
-    ]).as('preload');
+    cy.route('/api/todos', '@todosPreload').as('preload');
 
     cy.visit('/');
 
     cy.wait('@preload');
 
-    cy.store('todos')
-      .lo_filter(todo => {
-        return todo.id == 1;
-      })
-      .should('deep.equal', [
-        {
-          text: 'first',
-          completed: true,
-          id: 1
-        }
-      ]);
+    cy.store('todos').should('deep.equal', this.todosPreload);
 
-    cy.store('todos')
-      .lo_find(todo => {
-        return todo.id == 1;
-      })
-      .lo_pick('text')
-      .should('deep.equal', { text: 'first' });
+    /*This is using callbacks*/
+    /*
+    cy.fixture('todos/all.json').then(json => {
+      cy.route('/api/todos', json).as('preload');
+
+      cy.visit('/');
+
+      cy.wait('@preload');
+
+      cy.store('todos').should('deep.equal', json);
+
+      cy.store('todos')
+        .lo_find(todo => {
+          return todo.id == 1;
+        })
+        .lo_pick('text')
+        .should('deep.equal', { text: 'first' });
+    });
+    */
   });
 });
