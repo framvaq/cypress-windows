@@ -1,19 +1,32 @@
-/// <reference types="Cypress" />
-
 it('loads the page', () => {
   describe('Todo app', () => {
     cy.server();
 
     cy.route('/api/todos', [
       {
-        id: 3,
-        text: 'Hello world',
-        completed: false
+        text: 'first',
+        completed: true,
+        id: 1
       },
       {
-        id: 4,
-        text: 'Goodnight moon',
-        completed: true
+        text: 'second',
+        completed: false,
+        id: 2
+      },
+      {
+        text: 'third',
+        completed: true,
+        id: 3
+      },
+      {
+        text: 'fourth',
+        completed: false,
+        id: 4
+      },
+      {
+        text: 'fifth',
+        completed: true,
+        id: 5
       }
     ]).as('preload');
 
@@ -21,31 +34,23 @@ it('loads the page', () => {
 
     cy.wait('@preload');
 
-    cy.store('todos').should('deep.equal', [
-      {
-        id: 3,
-        text: 'Hello world',
-        completed: false
-      },
-      {
-        id: 4,
-        text: 'Goodnight moon',
-        completed: true
-      }
-    ]);
+    cy.store('todos')
+      .lo_filter(todo => {
+        return todo.id == 1;
+      })
+      .should('deep.equal', [
+        {
+          text: 'first',
+          completed: true,
+          id: 1
+        }
+      ]);
 
-    cy.store();
-
-    cy.get('[data-cy=todo-item-3]')
-      .should('have.text', 'Hello world')
-      .should('not.have.class', 'completed')
-      .find('.toggle')
-      .should('not.be.checked');
-
-    cy.get('[data-cy=todo-item-4]')
-      .should('have.text', 'Goodnight moon')
-      .should('have.class', 'completed')
-      .find('.toggle')
-      .should('be.checked');
+    cy.store('todos')
+      .lo_find(todo => {
+        return todo.id == 1;
+      })
+      .lo_pick('text')
+      .should('deep.equal', { text: 'first' });
   });
 });
