@@ -1,5 +1,6 @@
 [
   {
+<<<<<<< HEAD
     "text": "first",
     "completed": true,
     "id": 1
@@ -23,5 +24,15 @@
     "text": "fifth",
     "completed": true,
     "id": 5
+=======
+    "id": 1,
+    "text": "Hello world",
+    "completed": false
+  },
+  {
+    "id": 2,
+    "text": "Goodnight moon",
+    "completed": true
+>>>>>>> network-retries
   }
 ]

@@ -1,13 +1,14 @@
 import {
   TODOS_LOADED,
   ADD_TODO,
+  ADD_TODO_FAIL,
   DELETE_TODO,
   EDIT_TODO,
   LOCAL_CLEAR_COMPLETED,
-  BULK_EDIT_TODOS,
-} from '../constants/ActionTypes'
+  BULK_EDIT_TODOS
+} from '../constants/ActionTypes';
 
-const initialState = [ ]
+const initialState = [];
 
 export default function todos(state = initialState, action) {
   switch (action.type) {
@@ -22,27 +23,24 @@ export default function todos(state = initialState, action) {
           completed: false,
           text: action.text
         }
-      ]
+      ];
+
+    case ADD_TODO_FAIL:
+      return state.filter(todo => todo.text !== action.text);
 
     case DELETE_TODO:
-      return state.filter(todo =>
-        todo.id !== action.id
-      )
+      return state.filter(todo => todo.id !== action.id);
 
     case EDIT_TODO:
-      return state.map(todo =>
-        todo.id === action.id ?
-          action.todo :
-          todo
-      )
+      return state.map(todo => (todo.id === action.id ? action.todo : todo));
 
     case BULK_EDIT_TODOS:
-      return action.todos
+      return action.todos;
 
     case LOCAL_CLEAR_COMPLETED:
-      return state.filter(todo => todo.completed === false)
+      return state.filter(todo => todo.completed === false);
 
     default:
-      return state
+      return state;
   }
 }
