@@ -30,9 +30,11 @@
     "todomvc-app-css": "^2.1.1"
   },
   "scripts": {
-    "start": "concurrently 'npm:frontend' 'npm:api'",
+    "start": "concurrently 'npm:frontend' 'npm:api' 'npm:frontend-test' 'npm:api-test'",
     "frontend": "cross-env PORT=5000 REACT_APP_API_URL=http://localhost:3000 react-scripts start",
     "api": "node --inspect server.js",
+    "frontend-test": "cross-env PORT=5001 REACT_APP_API_URL=http://localhost:3001 react-scripts start",
+    "api-test": "env NODE_ENV=test node --inspect server.js",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "test": "react-scripts test --env=node",
