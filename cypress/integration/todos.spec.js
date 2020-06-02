@@ -8,16 +8,16 @@ describe('Todo app', () => {
   function (){}; WORKS!!
   () => {}; DOES NOT WORK!!=> does not have a this context
   */
-  it('loads the page', function () {
-    cy.server();
+  it.only('loads the page', function () {
+    cy.server({ force404: true });
 
-    cy.route('/api/todos', '@todosPreload').as('preload');
+    cy.route('/api/todos', '@todos').as('preload');
 
     cy.visit('/');
 
     cy.wait('@preload');
 
-    cy.store('todos').should('deep.equal', this.todosPreload);
+    //cy.store('todos').should('deep.equal', this.todosPreload);
 
     /*This is using callbacks*/
     cy.fixture('todos/all.json').then(json => {
@@ -34,13 +34,18 @@ describe('Todo app', () => {
           return todo.id == 1;
         })
         .lo_pick('text')
-        .should('deep.equal', { text: 'first' });
+        .should('deep.equal', { text: 'Hello world' });
+
+      cy.route('PUT', 'api/todos/1', 'ok').as('update');
+      cy.get('[data-cy=todo-item-1] > .view > label').dblclick();
+      cy.get('[data-cy=todo-input-edit]').clear().type('Updated todo{enter}');
+      cy.wait('@update');
     });
   });
 
-  context.only('Todo creation retries', function () {
+  context('Todo creation retries', function () {
     beforeEach(function () {
-      cy.server();
+      cy.server({ force404: true });
       // Alias the fixture data
       cy.route('/api/todos', '@todos').as('preload');
       cy.visit('/');
